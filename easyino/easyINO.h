@@ -24,7 +24,6 @@
 /*---INCLUSÕES DE BIBLIOTECAS---*/
 #include <Arduino.h>
 #include <String.h>
-#include <LiquidCrystal.h>
 
 /*---easyINO-DEF_BEGIN---*/
 void modoPino(uint8_t pino, uint8_t modo);
@@ -32,13 +31,13 @@ void escreveDigital(uint8_t pino, uint8_t estado);
 uint8_t leDigital(uint8_t pino);
 void iniciaSerial(unsigned int baud);
 void espera(short ms);
+void esperaMicrosegundos(unsigned int);
 void enviaSerial(String msg);
 String leSerial();
 int leAnalogico(uint8_t pino);
 void escreveAnalogico(uint8_t pino, int valor);
 unsigned long milisegundos();
 unsigned long microsegundos();
-void esperaMicrosegundos(unsigned int);
 double seno(float angulo);
 double cosseno(float angulo);
 double tangente(float angulo);
@@ -51,26 +50,30 @@ long menor(long numero1, long numero2);
 long restricao(long numero, long minimo, long maximo);
 long aleatorio(long maximo);
 long aleatorio(long minimo, long maximo);
+void iniciaAleatorio(long inicio);
 void tocarSom(uint8_t pino, unsigned int frequencia);
 void tocarSom(uint8_t pino, unsigned int frequencia, unsigned long duracao);
 void desligaSom(uint8_t pino);
 bool serialDisponivel();
-LiquidCrystal telaLCD(uint8_t pinoRS, uint8_t pinoEnable, uint8_t pinoD4, uint8_t pinoD5, uint8_t pinoD6, uint8_t pinoD7);
+void acendeLed(uint8_t pino);
+void apagaLed(uint8_t pino);
+void interrupcao();
+void desinterrupcao();
 
 /*---TRADUÇÕES---*/
 /*--Esta função define o modo do pino escolhido como entrada ou saída--*/
 void modoPino(uint8_t pino, uint8_t modo){
 	if(modo)
-		pinMode(pino, OUTPUT);
+		pinMode(pino,1);
 	else
-		pinMode(pino, INPUT);
+		pinMode(pino,0);
 }
 /*--Esta função faz uma escrita digital na porta digital--*/
 void escreveDigital(uint8_t pino, uint8_t estado){
 	if(estado)
-		digitalWrite(pino, HIGH);
+		digitalWrite(pino,1);
 	else
-		digitalWrite(pino, LOW);
+		digitalWrite(pino,0);
 }
 /*--Esta função faz uma leitura digital da porta escolhida--*/
 uint8_t leDigital(uint8_t pino){
@@ -114,15 +117,15 @@ void esperaMicrosegundos(unsigned int microsegundos){
 }
 /*--Esta função retorna o valor do seno do angulo--*/
 double seno(float angulo){
-	return sin(angulo * 0.0174532925);
+	return sin(angulo);
 }
 /*--Esta função retorna o valor do cosseno do angulo--*/
 double cosseno(float angulo){
-	return sin(angulo * 0.0174532925);
+	return sin(angulo);
 }
 /*--Esta função retorna o valor do tangente do angulo--*/
 double tangente(float angulo){
-	return sin(angulo * 0.0174532925);
+	return sin(angulo);
 }
 /*--Esta função retorna o valor absoluto--*/
 int absoluto(int numero){
@@ -160,6 +163,10 @@ long aleatorio(long maximo){
 long aleatorio(long minimo, long maximo);
 	return random(minimo, maximo);
 }
+/*Esta função inicializa a função aleatoria com um valor*/
+void iniciaAleatorio(long inicio){
+  randomSeed(inicio);
+}
 /*Esta função toca um som*/
 void tocarSom(uint8_t pino, unsigned int frequencia){
 	tone(pino, frequencia);
@@ -176,9 +183,21 @@ void desligaSom(uint8_t pino){
 bool serialDisponivel(){
 	return Serial.available();
 }
-/*Esta função inicializa um tela LCD*/
-LiquidCrystal telaLCD(uint8_t pinoRS, uint8_t pinoEnable, uint8_t pinoD4, uint8_t pinoD5, uint8_t pinoD6, uint8_t pinoD7){
-	return LiquidCrystal lcd(pinoRS, pinoEnable, pinoD4, pinoD5, pinoD6, pinoD7);
+/*Esta função acende um led em uma determinada porta digital*/
+void acendeLed(uint8_t pino){
+  digitalWrite(pino,1);
+}
+/*Esta função apaga um led em uma determinada porta digital*/
+void apagaLed(uint8_t pino){
+  digitalWrite(pino,0);
+}
+/*Interrompe um conjunto de instruções*/
+void interrupcao(){
+  interrupts();
+}
+/*Desinterrompe um conjunto de instruções*/
+void desinterrupcao(){
+  noInterrupts();
 }
 /*--easyINO-DEF_END--*/
 #endif
