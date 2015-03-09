@@ -162,7 +162,7 @@ long aleatorio(long maximo){
 	return random(maximo);
 }
 /*Esta função gera um valor aleatório entre dois valores*/
-long aleatorio(long minimo, long maximo);
+long aleatorio(long minimo, long maximo){
 	return random(minimo, maximo);
 }
 /*Esta função inicializa a função aleatoria com um valor*/
@@ -183,7 +183,7 @@ void desligaSom(uint8_t pino){
 }
 /*Esta função verifica se há dados disponiveis na comunicação serial*/
 bool serialDisponivel(){
-	return Serial.available();
+	return Serial.available() > 0;
 }
 /*Esta função acende um led em uma determinada porta digital*/
 void acendeLed(uint8_t pino){
